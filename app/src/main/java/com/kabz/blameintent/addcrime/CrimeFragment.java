@@ -29,6 +29,11 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MyApp) getActivity().getApplication()).getComponent().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         mPresenter = new AddCrimePresenter(mCrimeRepository, this);
     }
 
@@ -36,14 +41,14 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //FragmentCrimeBinding binding = DataBindingUtil.setContentView(getActivity(), R.layout.fragment_crime);
-
         mBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_crime, container, false);
-
-        mPresenter.start(UUID.randomUUID());
-
-        //binding.setCrime(mCrime);
-
         return mBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start(UUID.randomUUID());
     }
 
     @Override
