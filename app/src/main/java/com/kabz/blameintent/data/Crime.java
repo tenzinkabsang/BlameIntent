@@ -2,6 +2,7 @@ package com.kabz.blameintent.data;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.Log;
 
 import com.kabz.blameintent.BR;
 
@@ -27,7 +28,9 @@ public class Crime extends BaseObservable {
     }
 
     public void setTitle(String title) {
-        if(mTitle.equals(title)) return;
+        if(mTitle == null && title == null) return;
+
+        Log.i("Crime", "New title is " + title);
 
         mTitle = title;
         notifyPropertyChanged(BR.title);

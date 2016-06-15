@@ -1,0 +1,40 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <variable
+      name="crime"
+      type="com.kabz.blameintent.data.Crime" />
+
+  </data>
+
+  <android.support.constraint.ConstraintLayout android:id="@+id/constraintLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+      android:id="@+id/crime_title_et"
+      android:text="@={crime.title}"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:ems="10"
+      android:hint="@string/crime_title_hint"
+      app:layout_constraintLeft_toLeftOf="@+id/constraintLayout"
+      app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+      android:layout_marginTop="8dp" />
+
+    <TextView
+      android:layout_width="match_parent"
+      android:background="#ee8"
+      android:text="@{crime.title}"
+      android:layout_height="wrap_content"
+      tools:layout_editor_absoluteY="168dp"
+      android:id="@+id/textView"
+      tools:layout_editor_absoluteX="16dp" />
+
+
+  </android.support.constraint.ConstraintLayout>
+
+</layout>
