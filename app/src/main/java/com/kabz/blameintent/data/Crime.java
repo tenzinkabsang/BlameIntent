@@ -2,13 +2,11 @@ package com.kabz.blameintent.data;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.Log;
 
 import com.kabz.blameintent.BR;
 import com.kabz.blameintent.util.Objectz;
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.UUID;
 
 public class Crime extends BaseObservable {

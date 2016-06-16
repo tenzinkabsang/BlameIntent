@@ -23,7 +23,7 @@ abstract public class DataBoundAdapter<T extends ViewDataBinding>
         return new DataBoundViewHolder(binder);
     }
 
-    static class DataBoundViewHolder<T extends ViewDataBinding> extends RecyclerView.ViewHolder {
+    public static class DataBoundViewHolder<T extends ViewDataBinding> extends RecyclerView.ViewHolder {
         public final T dataBinder;
         public DataBoundViewHolder(T viewBinder){
             super(viewBinder.getRoot());
