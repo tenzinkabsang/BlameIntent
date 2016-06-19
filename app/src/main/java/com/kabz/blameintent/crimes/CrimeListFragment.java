@@ -113,7 +113,6 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
     public class CrimeAdapter extends DataBoundAdapter<ListItemCrimeBinding> {
 
         private final List<Crime> crimeList = new ArrayList<>();
-        private final PropertyChangeRegistry mListeners = new PropertyChangeRegistry();
 
         public CrimeAdapter(){
             super(R.layout.list_item_crime);
@@ -139,12 +138,8 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
         @Override
         public int getItemCount() {
-            return crimeList.size();
-        }
-
-        public void setSelected(Crime selected) {
-            Log.d("CrimeListFragment", "-- Crime title clicked ---");
-            setCrime(selected);
+            int count = crimeList.size();
+            return count;
         }
     }
 }

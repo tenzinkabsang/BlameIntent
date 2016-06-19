@@ -16,7 +16,8 @@
 
   <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="@{() -> presenter.setSelected(model)}"
     >
 
     <CheckBox
@@ -30,11 +31,9 @@
     <TextView
       android:id="@+id/list_item_crime_title_tv"
       android:text="@{model.title}"
-      android:onClick="@{() -> presenter.setSelected(model)}"
       android:hint="@string/crime_title_hint"
       android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
       android:textStyle="bold"
-      android:background="@color/colorAccent"
       android:padding="4dp"
       tools:text="Crime Title"
       android:layout_width="match_parent"
