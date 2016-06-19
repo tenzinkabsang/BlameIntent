@@ -12,6 +12,8 @@ public interface CrimesContract {
 
     interface Presenter {
 
-        void start();
+        void loadCrimes(boolean force);
+
+        void setSelected(Crime crime);
     }
 }

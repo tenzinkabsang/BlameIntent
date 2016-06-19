@@ -10,10 +10,8 @@
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
 
-    <activity android:name=".addcrime.CrimeActivity"
-      android:exported="true"/>
 
-    <activity android:name=".crimes.CrimeListActivity"/>
+    <activity android:name=".crimes.CrimeListActivity" android:exported="true"/>
 
     <!-- use an alias in case we want to change the launch activity later without breaking
         homescreen shortcuts. Note must be defined after the targetActivity -->
@@ -26,6 +24,7 @@
       </intent-filter>
     </activity-alias>
 
+    <activity android:name=".addcrime.CrimeActivity"/>
   </application>
 
 </manifest>

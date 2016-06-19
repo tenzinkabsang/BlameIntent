@@ -233,8 +233,8 @@ public class AnimUtils {
         }
 
         @Override
-        public void start() {
-            mAnimator.start();
+        public void loadCrimes() {
+            mAnimator.loadCrimes();
         }
     }
 

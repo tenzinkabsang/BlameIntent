@@ -44,7 +44,7 @@ public class CrimesPresenterTest {
         PublishSubject<List<Crime>> subject = PublishSubject.create();
         when(mCrimeRepository.getCrimes()).thenReturn(subject);
         
-        mPresenter.start();
+        mPresenter.loadCrimes(true);
 
         verify(mView).setProgressIndicator(true);
 

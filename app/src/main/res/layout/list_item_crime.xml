@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools">
 
   <data>
     <import type="com.kabz.blameintent.util.DateUtils" />
+
     <variable
-      name="crime"
+      name="presenter"
+      type="com.kabz.blameintent.crimes.CrimesContract.Presenter"/>
+    <variable
+      name="model"
       type="com.kabz.blameintent.data.Crime" />
   </data>
 
   <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <CheckBox
       android:id="@+id/list_item_crime_solved_check_box"
-      android:checked="@{crime.solved}"
+      android:checked="@={model.solved}"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentRight="true"
@@ -23,10 +29,12 @@
 
     <TextView
       android:id="@+id/list_item_crime_title_tv"
-      android:text="@{crime.title}"
+      android:text="@{model.title}"
+      android:onClick="@{() -> presenter.setSelected(model)}"
       android:hint="@string/crime_title_hint"
       android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
       android:textStyle="bold"
+      android:background="@color/colorAccent"
       android:padding="4dp"
       tools:text="Crime Title"
       android:layout_width="match_parent"
@@ -35,7 +43,7 @@
     <TextView
       android:id="@+id/list_item_crime_date_tv"
       android:padding="4dp"
-      android:text="@{DateUtils.formatLong(crime.date)}"
+      android:text="@{DateUtils.formatLong(model.date)}"
       tools:text="Crime Date"
       android:layout_toLeftOf="@id/list_item_crime_solved_check_box"
       android:layout_below="@id/list_item_crime_title_tv"

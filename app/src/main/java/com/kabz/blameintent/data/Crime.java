@@ -10,9 +10,16 @@ import java.util.Date;
 import java.util.UUID;
 
 public class Crime extends BaseObservable {
+    @Bindable
     private UUID mId;
+
+    @Bindable
     private String mTitle;
+
+    @Bindable
     private Date mDate;
+
+    @Bindable
     private boolean mSolved;
 
     public Crime() {
@@ -20,12 +27,10 @@ public class Crime extends BaseObservable {
         mDate = new Date();
     }
 
-    @Bindable
     public UUID getId() {
         return mId;
     }
 
-    @Bindable
     public String getTitle() {
         return mTitle;
     }
@@ -37,7 +42,6 @@ public class Crime extends BaseObservable {
         notifyPropertyChanged(BR.title);
     }
 
-    @Bindable
     public Date getDate() {
         return mDate;
     }
@@ -49,7 +53,6 @@ public class Crime extends BaseObservable {
         notifyPropertyChanged(BR.date);
     }
 
-    @Bindable
     public boolean isSolved() {
         return mSolved;
     }
