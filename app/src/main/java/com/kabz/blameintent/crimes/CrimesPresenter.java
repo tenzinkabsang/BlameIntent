@@ -1,7 +1,5 @@
 package com.kabz.blameintent.crimes;
 
-import android.util.Log;
-
 import com.kabz.blameintent.data.Crime;
 import com.kabz.blameintent.data.CrimeRepository;
 
@@ -24,7 +22,9 @@ public class CrimesPresenter implements CrimesContract.Presenter {
     }
 
     @Override
-    public void setSelected(Crime crime) {
-        Log.i("CrimesPresenter", "-- crime selected " + crime.getTitle());
+    public void crimeSelected(Crime crime) {
+        mCrimeRepository
+                .getCrime(crime.getId())
+                .subscribe(c -> mCrimesView.showDetail(c));
     }
 }

@@ -6,6 +6,8 @@ import com.kabz.blameintent.data.CrimeRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -14,6 +16,8 @@ import java.util.List;
 
 import rx.subjects.PublishSubject;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,7 +32,10 @@ public class CrimesPresenterTest {
     CrimesContract.Presenter mPresenter;
     
     List<Crime> mCrimes;
-    
+
+    @Captor
+    ArgumentCaptor<Crime> mCrimeCaptor;
+
     @Before
     public void beforeEach() {
         mCrimes = Arrays.asList(
@@ -53,6 +60,20 @@ public class CrimesPresenterTest {
         verify(mView).setProgressIndicator(false);
 
         verify(mView).show(mCrimes);
+    }
+
+    @Test
+    public void when_item_selected_from_list_show_item_details() {
+        PublishSubject<Crime> subject = PublishSubject.create();
+        when(mCrimeRepository.getCrime(111)).thenReturn(subject);
+
+        Crime c = new Crime(111);
+
+        mPresenter.crimeSelected(c);
+
+        subject.onNext(c);
+        verify(mView).showDetail(mCrimeCaptor.capture());
+        assertEquals(111, mCrimeCaptor.getValue().getId());
     }
     
     

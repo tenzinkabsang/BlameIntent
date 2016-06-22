@@ -8,7 +8,7 @@ import rx.Observable;
 
 public interface CrimeRepository {
 
-    Observable<Crime> getCrime(UUID crimeId);
+    Observable<Crime> getCrime(int crimeId);
 
     Observable<List<Crime>> getCrimes();
 }

@@ -58,6 +58,11 @@ android {
             variant.setIgnore(true)
         }
     }
+
+    // set unit test android.jar to return default values rather than throwing exceptions.
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 

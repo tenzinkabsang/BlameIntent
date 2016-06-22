@@ -1,14 +1,13 @@
 package com.kabz.blameintent.crimes;
 
 import android.content.Context;
-import android.databinding.PropertyChangeRegistry;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.kabz.blameintent.MyApp;
 import com.kabz.blameintent.R;
 import com.kabz.blameintent.adapters.DataBoundAdapter;
 import com.kabz.blameintent.adapters.DataBoundViewHolder;
+import com.kabz.blameintent.pager.CrimePagerActivity;
 import com.kabz.blameintent.data.Crime;
 import com.kabz.blameintent.data.CrimeRepository;
 import com.kabz.blameintent.databinding.FragmentCrimeListBinding;
@@ -33,24 +33,15 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
     @Inject
     CrimeRepository mCrimeRepository;
 
-    Crime selectedCrime;
-
-    CrimeAdapter crimeAdapter;
-
-    private final PropertyChangeRegistry mListeners = new PropertyChangeRegistry();
+    CrimeAdapter mCrimeAdapter;
 
     CrimesContract.Presenter mPresenter;
+
     private FragmentCrimeListBinding mFragmentView;
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MyApp)getActivity().getApplication()).getComponent().inject(this);
-        crimeAdapter = new CrimeAdapter();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mPresenter = new CrimesPresenter(mCrimeRepository, this);
     }
 
@@ -76,9 +67,10 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
         mFragmentView.refreshCrimeLayout.setOnRefreshListener(() -> mPresenter.loadCrimes(true));
 
         // recycler view
+        mCrimeAdapter = new CrimeAdapter();
         mFragmentView.crimeRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mFragmentView.crimeRecyclerView.setHasFixedSize(true);
-        mFragmentView.crimeRecyclerView.setAdapter(crimeAdapter);
+        mFragmentView.crimeRecyclerView.setAdapter(mCrimeAdapter);
 
 
         return mFragmentView.getRoot();
@@ -86,7 +78,12 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     @Override
     public void show(List<Crime> model) {
-        crimeAdapter.replaceData(model);
+        if(mCrimeAdapter == null) {
+            mCrimeAdapter = new CrimeAdapter();
+            mFragmentView.crimeRecyclerView.setAdapter(mCrimeAdapter);
+        }
+
+        mCrimeAdapter.replaceData(model);
     }
 
     @Override
@@ -99,15 +96,10 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
         srl.post(() -> srl.setRefreshing(active));
     }
 
-    public Crime getSelectedCrime(){
-        return selectedCrime;
-    }
-
-    public void setCrime(Crime selected){
-        if(selected == selectedCrime) return;
-
-        selectedCrime = selected;
-        //mListeners.notifyChange(this, BR.selectedCrime);
+    @Override
+    public void showDetail(Crime c) {
+        Intent intent = CrimePagerActivity.newIntent(getContext(), c.getId());
+        startActivity(intent);
     }
 
     public class CrimeAdapter extends DataBoundAdapter<ListItemCrimeBinding> {
@@ -116,6 +108,9 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
         public CrimeAdapter(){
             super(R.layout.list_item_crime);
+
+            // indicate that each item has unique ids, to let RecyclerView handle changes
+            setHasStableIds(true);
         }
 
         public void replaceData(Collection<Crime> crimes) {
@@ -134,6 +129,13 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
         public DataBoundViewHolder<ListItemCrimeBinding> onCreateViewHolder(ViewGroup parent, int viewType) {
             DataBoundViewHolder<ListItemCrimeBinding> vh = super.onCreateViewHolder(parent, viewType);
             return vh;
+        }
+
+        // partner of hasStableIds()
+        @Override
+        public long getItemId(int position) {
+            Crime c = crimeList.get(position);
+            return c != null ? c.getId() : 0;
         }
 
         @Override

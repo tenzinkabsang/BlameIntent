@@ -32,7 +32,7 @@ public class AddCrimePresenterTest {
 
     @Before
     public void setup() {
-        mCrime = new Crime();
+        mCrime = new Crime(111);
         mCrime.setTitle("crime-1");
         mPresenter = new AddCrimePresenter(mCrimeRepository, mView);
     }
@@ -40,9 +40,9 @@ public class AddCrimePresenterTest {
     @Test
     public void start_initializesViewWithTheSpecifiedCrime() {
         PublishSubject<Crime> subject = PublishSubject.create();
-        when(mCrimeRepository.getCrime(any(UUID.class))).thenReturn(subject);
+        when(mCrimeRepository.getCrime(any(Integer.class))).thenReturn(subject);
 
-        mPresenter.start(UUID.randomUUID());
+        mPresenter.start(111);
 
         subject.onNext(mCrime);
         subject.onCompleted();

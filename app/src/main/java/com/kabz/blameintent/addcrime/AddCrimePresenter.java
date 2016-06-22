@@ -19,7 +19,7 @@ public class AddCrimePresenter implements AddCrimeContract.Presenter {
     }
 
     @Override
-    public void start(UUID crimeId) {
+    public void start(int crimeId) {
         mView.setProgressIndicator(true);
 
         mCrimeRepository.getCrime(crimeId)

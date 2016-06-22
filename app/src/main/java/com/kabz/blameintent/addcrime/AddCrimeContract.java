@@ -12,7 +12,7 @@ public interface AddCrimeContract {
     }
 
     interface Presenter {
-        void start(UUID crimeId);
+        void start(int crimeId);
     }
 }
 

@@ -8,12 +8,13 @@ import java.util.List;
 public interface CrimesContract {
     interface View extends BaseView<List<Crime>>{
 
+        void showDetail(Crime c);
     }
 
     interface Presenter {
 
         void loadCrimes(boolean force);
 
-        void setSelected(Crime crime);
+        void crimeSelected(Crime crime);
     }
 }

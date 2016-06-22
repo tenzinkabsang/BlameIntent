@@ -14,26 +14,29 @@ import com.kabz.blameintent.data.Crime;
 import com.kabz.blameintent.data.CrimeRepository;
 import com.kabz.blameintent.databinding.FragmentCrimeBinding;
 
-import java.util.UUID;
-
 import javax.inject.Inject;
 
 public class CrimeFragment extends Fragment implements AddCrimeContract.View {
 
+    private static final String ARG_CRIME_ID = "fragment-crime-id";
     @Inject
     CrimeRepository mCrimeRepository;
 
     private AddCrimeContract.Presenter mPresenter;
     private FragmentCrimeBinding mBinding;
 
+    public static CrimeFragment newInstance(int crimeId) {
+        Bundle args = new Bundle();
+        args.putInt(ARG_CRIME_ID, crimeId);
+
+        CrimeFragment fragment = new CrimeFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MyApp) getActivity().getApplication()).getComponent().inject(this);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
         mPresenter = new AddCrimePresenter(mCrimeRepository, this);
     }
 
@@ -48,7 +51,9 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start(UUID.randomUUID());
+
+        int crimeId = getArguments().getInt(ARG_CRIME_ID);
+        mPresenter.start(crimeId);
     }
 
     @Override

@@ -7,11 +7,11 @@ import com.kabz.blameintent.BR;
 import com.kabz.blameintent.util.Objectz;
 
 import java.util.Date;
-import java.util.UUID;
+import java.util.Random;
 
 public class Crime extends BaseObservable {
     @Bindable
-    private UUID mId;
+    private int mId;
 
     @Bindable
     private String mTitle;
@@ -23,11 +23,16 @@ public class Crime extends BaseObservable {
     private boolean mSolved;
 
     public Crime() {
-        mId = UUID.randomUUID();
+        mId = new Random().nextInt();
         mDate = new Date();
     }
 
-    public UUID getId() {
+    public Crime(int id) {
+        mId = id;
+        mDate = new Date();
+    }
+
+    public int getId() {
         return mId;
     }
 
