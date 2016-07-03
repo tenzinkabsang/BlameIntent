@@ -20,7 +20,7 @@ public class CrimePagerPresenter implements CrimePagerContract.Presenter {
     @Override
     public void start() {
         mPagerView.setProgressIndicator(true);
-        Subscription sub = mCrimeRepository.getCrimes()
+        Subscription sub = mCrimeRepository.getCrimes(false)
                      .subscribe(crimes -> {
                          mPagerView.setProgressIndicator(false);
                          mPagerView.init(crimes);

@@ -16,15 +16,23 @@ public class CrimesPresenter implements CrimesContract.Presenter {
     @Override
     public void loadCrimes(boolean force) {
         mCrimesView.setProgressIndicator(true);
-        mCrimeRepository.getCrimes()
+        mCrimeRepository.getCrimes(force)
                 .doOnNext(crimes -> mCrimesView.setProgressIndicator(false))
                 .subscribe(crimes -> mCrimesView.show(crimes));
     }
 
     @Override
     public void crimeSelected(Crime crime) {
+        int id = crime.getId();
         mCrimeRepository
                 .getCrime(crime.getId())
                 .subscribe(c -> mCrimesView.showDetail(c));
+    }
+
+    @Override
+    public void showSubtitle() {
+        mCrimeRepository
+                .getCrimes(false)
+                .subscribe(crimes -> mCrimesView.displaySubtitle(crimes.size()));
     }
 }

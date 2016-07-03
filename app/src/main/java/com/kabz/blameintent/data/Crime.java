@@ -22,8 +22,13 @@ public class Crime extends BaseObservable {
     @Bindable
     private boolean mSolved;
 
+    @Bindable
+    private String mSuspect;
+
+    @Bindable
+    private String mImageUrl;
+
     public Crime() {
-        mId = new Random().nextInt();
         mDate = new Date();
     }
 
@@ -32,8 +37,23 @@ public class Crime extends BaseObservable {
         mDate = new Date();
     }
 
+    public String getPhotoFilename() {
+        return "IMG_" + getId() + ".jpg";
+    }
+
     public int getId() {
         return mId;
+    }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        if(Objectz.equals(mSuspect, suspect)) return;
+
+        mSuspect = suspect;
+        notifyPropertyChanged(BR.suspect);
     }
 
     public String getTitle() {
@@ -45,6 +65,17 @@ public class Crime extends BaseObservable {
 
         mTitle = title;
         notifyPropertyChanged(BR.title);
+    }
+
+    public String getImageUrl() {
+        return mImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        if(Objectz.equals(mImageUrl, imageUrl)) return;
+
+        mImageUrl = imageUrl;
+        notifyPropertyChanged(BR.imageUrl);
     }
 
     public Date getDate() {

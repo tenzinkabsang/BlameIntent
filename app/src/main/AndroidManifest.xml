@@ -2,6 +2,8 @@
 <manifest package="com.kabz.blameintent"
   xmlns:android="http://schemas.android.com/apk/res/android">
 
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="18" />
+
   <application
     android:name=".MyApp"
     android:allowBackup="true"
@@ -11,11 +13,14 @@
     android:theme="@style/AppTheme">
 
 
-    <activity android:name=".crimes.CrimeListActivity" android:exported="true"/>
+    <activity
+      android:name=".crimes.CrimeListActivity"
+      android:exported="true" />
 
     <!-- use an alias in case we want to change the launch activity later without breaking
         homescreen shortcuts. Note must be defined after the targetActivity -->
-    <activity-alias android:name=".Launcher"
+    <activity-alias
+      android:name=".Launcher"
       android:targetActivity=".crimes.CrimeListActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -24,7 +29,13 @@
       </intent-filter>
     </activity-alias>
 
-    <activity android:name=".pager.CrimePagerActivity"/>
+    <activity
+      android:name=".pager.CrimePagerActivity"
+      android:parentActivityName=".crimes.CrimeListActivity" />
+
+    <activity
+      android:name=".addcrime.NewCrimeActivity"
+      android:parentActivityName=".crimes.CrimeListActivity" />
   </application>
 
 </manifest>

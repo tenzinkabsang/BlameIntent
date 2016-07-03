@@ -49,7 +49,7 @@ public class CrimesPresenterTest {
     @Test
     public void list_of_crimes_passed_to_view(){
         PublishSubject<List<Crime>> subject = PublishSubject.create();
-        when(mCrimeRepository.getCrimes()).thenReturn(subject);
+        when(mCrimeRepository.getCrimes(true)).thenReturn(subject);
         
         mPresenter.loadCrimes(true);
 

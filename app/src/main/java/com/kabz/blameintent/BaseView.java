@@ -1,7 +1,5 @@
 package com.kabz.blameintent;
 
-public interface BaseView<T> {
-    void show(T model);
-
+public interface BaseView {
     void setProgressIndicator(boolean active);
 }

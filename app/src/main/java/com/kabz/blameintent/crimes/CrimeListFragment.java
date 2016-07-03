@@ -7,8 +7,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,6 +21,7 @@ import com.kabz.blameintent.MyApp;
 import com.kabz.blameintent.R;
 import com.kabz.blameintent.adapters.DataBoundAdapter;
 import com.kabz.blameintent.adapters.DataBoundViewHolder;
+import com.kabz.blameintent.addcrime.NewCrimeActivity;
 import com.kabz.blameintent.pager.CrimePagerActivity;
 import com.kabz.blameintent.data.Crime;
 import com.kabz.blameintent.data.CrimeRepository;
@@ -30,6 +36,10 @@ import javax.inject.Inject;
 
 public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
+    public static final String TAG = "CrimeListFragment";
+
+    private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+
     @Inject
     CrimeRepository mCrimeRepository;
 
@@ -39,16 +49,22 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     private FragmentCrimeListBinding mFragmentView;
 
+    private boolean mSubtitleVisible;
+
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MyApp)getActivity().getApplication()).getComponent().inject(this);
+        ((MyApp) getActivity().getApplication()).getComponent().inject(this);
         mPresenter = new CrimesPresenter(mCrimeRepository, this);
+        setHasOptionsMenu(true);
+        Log.i(TAG, "onCreate: called");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume: called");
         mPresenter.loadCrimes(false);
+        mPresenter.showSubtitle();
     }
 
     @Nullable
@@ -72,13 +88,63 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
         mFragmentView.crimeRecyclerView.setHasFixedSize(true);
         mFragmentView.crimeRecyclerView.setAdapter(mCrimeAdapter);
 
+        if (savedInstanceState != null)
+            mSubtitleVisible = savedInstanceState.getBoolean(SAVED_SUBTITLE_VISIBLE, false);
+
 
         return mFragmentView.getRoot();
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVED_SUBTITLE_VISIBLE, mSubtitleVisible);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_crime_list_menu, menu);
+
+        MenuItem subtitleItem = menu.findItem(R.id.menu_item_show_subtitle);
+        if (mSubtitleVisible)
+            subtitleItem.setTitle(R.string.hide_subtitle);
+        else
+            subtitleItem.setTitle(R.string.show_subtitle);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_new:
+                Intent intent = NewCrimeActivity.newIntent(getContext());
+                startActivity(intent);
+                return true;
+
+            case R.id.menu_item_show_subtitle:
+                mSubtitleVisible = !mSubtitleVisible;
+                getActivity().invalidateOptionsMenu();
+                mPresenter.showSubtitle();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void displaySubtitle(int crimeCount) {
+        final String subtitle = mSubtitleVisible
+                ? getResources().getQuantityString(R.plurals.subtitle_plural, crimeCount, crimeCount)
+                : null;
+
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        activity.getSupportActionBar().setSubtitle(subtitle);
+    }
+
+    @Override
     public void show(List<Crime> model) {
-        if(mCrimeAdapter == null) {
+        if (mCrimeAdapter == null) {
             mCrimeAdapter = new CrimeAdapter();
             mFragmentView.crimeRecyclerView.setAdapter(mCrimeAdapter);
         }
@@ -88,7 +154,7 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     @Override
     public void setProgressIndicator(boolean active) {
-        if(getView() == null) return;
+        if (getView() == null) return;
 
         final SwipeRefreshLayout srl = (SwipeRefreshLayout) getView().findViewById(R.id.refresh_crime_layout);
 
@@ -102,11 +168,12 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
         startActivity(intent);
     }
 
+
     public class CrimeAdapter extends DataBoundAdapter<ListItemCrimeBinding> {
 
         private final List<Crime> crimeList = new ArrayList<>();
 
-        public CrimeAdapter(){
+        public CrimeAdapter() {
             super(R.layout.list_item_crime);
 
             // indicate that each item has unique ids, to let RecyclerView handle changes

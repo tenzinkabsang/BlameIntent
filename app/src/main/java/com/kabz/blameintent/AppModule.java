@@ -21,7 +21,7 @@ public class AppModule {
 
     @Provides @Singleton
     CrimeRepository provideCrimeRepository(){
-        return new CrimeLab();
+        return new CrimeLab(_app);
     }
 }
 
