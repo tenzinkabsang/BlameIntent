@@ -23,7 +23,6 @@ public class CrimesPresenter implements CrimesContract.Presenter {
 
     @Override
     public void crimeSelected(Crime crime) {
-        int id = crime.getId();
         mCrimeRepository
                 .getCrime(crime.getId())
                 .subscribe(c -> mCrimesView.showDetail(c));

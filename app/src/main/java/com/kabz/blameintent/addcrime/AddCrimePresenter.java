@@ -25,7 +25,7 @@ public class AddCrimePresenter implements AddCrimeContract.Presenter {
 
     @Override
     public void start(int crimeId) {
-        if (crimeId == 0) {
+        if (crimeId == -1) {
             mView.initialize(new Crime(), null);
         } else {
             mView.setProgressIndicator(true);
@@ -51,15 +51,15 @@ public class AddCrimePresenter implements AddCrimeContract.Presenter {
     @Override
     public void saveCrime(Crime crime) {
         Subscription sub = mCrimeRepository.save(crime)
-                .subscribe(crime1 -> {
-                });
+                .subscribe(crime1 -> mView.crimeSaved(crime1));
         mSubscription.add(sub);
     }
 
     @Override
     public void deleteCrime(Crime crime) {
         Subscription sub = mCrimeRepository.remove(crime.getId())
-                .subscribe(b -> mView.crimeRemoved(b));
+                .subscribe(b -> mView.crimeRemoved(b, crime));
+        mSubscription.add(sub);
     }
 
     @Override

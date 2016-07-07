@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
+import com.kabz.blameintent.R;
 import com.kabz.blameintent.SingleFragmentActivity;
 
 public class NewCrimeActivity extends SingleFragmentActivity {
+    @Override
+    protected int getLayoutResId() {
+        return R.layout.activity_masterdetail;
+    }
 
     @Override
     protected Fragment getFragment() {

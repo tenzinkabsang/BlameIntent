@@ -1,5 +1,6 @@
 package com.kabz.blameintent.crimes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,8 +38,17 @@ import javax.inject.Inject;
 public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     public static final String TAG = "CrimeListFragment";
-
     private static final String SAVED_SUBTITLE_VISIBLE = "subtitle";
+
+    /**
+     * Required interface for hosting activities.
+     */
+    public interface Callbacks {
+        void onCrimeSelected(Crime crime);
+        void onNewCrime();
+    }
+
+    private Callbacks mCallbacks;
 
     @Inject
     CrimeRepository mCrimeRepository;
@@ -51,6 +61,19 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     private boolean mSubtitleVisible;
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MyApp) getActivity().getApplication()).getComponent().inject(this);
@@ -117,8 +140,8 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_new:
-                Intent intent = NewCrimeActivity.newIntent(getContext());
-                startActivity(intent);
+
+                mCallbacks.onNewCrime();
                 return true;
 
             case R.id.menu_item_show_subtitle:
@@ -164,8 +187,7 @@ public class CrimeListFragment extends Fragment implements CrimesContract.View {
 
     @Override
     public void showDetail(Crime c) {
-        Intent intent = CrimePagerActivity.newIntent(getContext(), c.getId());
-        startActivity(intent);
+        mCallbacks.onCrimeSelected(c);
     }
 
 

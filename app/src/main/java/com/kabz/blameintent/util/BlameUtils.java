@@ -1,5 +1,6 @@
 package com.kabz.blameintent.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -11,7 +12,18 @@ public final class BlameUtils {
 
     public static final int CLOSE = 0;
 
-    public static void hideKeyboard(View view) {
+    public static void hideKeyboard(Activity activity) {
+        if (activity == null) return;
+
+        View view = activity.getCurrentFocus();
+
+        if (view == null) {
+            view = new View(activity);
+        }
+        hideKeyboard(view);
+    }
+
+    private static void hideKeyboard(final View view) {
         if (view == null) return;
 
         Context            context            = view.getContext();

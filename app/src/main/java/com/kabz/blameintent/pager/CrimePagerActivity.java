@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class CrimePagerActivity extends AppCompatActivity implements CrimePagerContract.View {
+public class CrimePagerActivity extends AppCompatActivity implements CrimePagerContract.View, CrimeFragment.Callbacks {
 
     private static final String EXTRA_CRIME_ID = "extra-crime-id";
 
@@ -78,6 +78,12 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimePagerC
         mProgressBar.setIndeterminate(active);
         mProgressBar.setVisibility(active ? View.VISIBLE : View.GONE);
         mViewPager.setVisibility(active ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void onCrimeChanged(Crime crime) {
+        // Close the activity and pop back to the list view
+        finish();
     }
 
 

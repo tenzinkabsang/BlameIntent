@@ -14,6 +14,9 @@ public final class CustomBinders {
     @BindingAdapter("bind:imageUrl")
     public static void setImageUrl(ImageView imageView, String url) {
         Context ctx = imageView.getContext();
-        Glide.with(ctx).load(url).into(imageView);
+        Glide.with(ctx).load(url)
+                .centerCrop()
+                .crossFade()
+                .into(imageView);
     }
 }

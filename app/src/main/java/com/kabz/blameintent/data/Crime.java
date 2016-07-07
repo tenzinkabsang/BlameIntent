@@ -72,7 +72,6 @@ public class Crime extends BaseObservable {
     }
 
     public void setImageUrl(String imageUrl) {
-        if(Objectz.equals(mImageUrl, imageUrl)) return;
 
         mImageUrl = imageUrl;
         notifyPropertyChanged(BR.imageUrl);

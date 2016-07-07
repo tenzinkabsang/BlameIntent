@@ -1,6 +1,7 @@
 package com.kabz.blameintent.addcrime;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import com.kabz.blameintent.MyApp;
 import com.kabz.blameintent.R;
@@ -36,13 +36,23 @@ import javax.inject.Inject;
 
 public class CrimeFragment extends Fragment implements AddCrimeContract.View {
 
-    private static final String ARG_CRIME_ID    = "fragment-crime-id";
+    private static final String ARG_CRIME_ID = "fragment-crime-id";
     private static final String DIALOG_DATE     = "dialog-date";
+    private static final String DIALOG_IMAGE = "dialog-image";
     private static final int    REQUEST_DATE    = 0;
     private static final int    REQUEST_CONTACT = 1;
     private static final int    REQUEST_PHOTO   = 2;
 
     public static final String TAG = "CrimeFragment";
+
+    /**
+     * Required interface for hosting activities
+     */
+    public interface Callbacks {
+        void onCrimeChanged(Crime crime);
+    }
+
+    private Callbacks mCallbacks;
 
     @Inject
     CrimeRepository mCrimeRepository;
@@ -63,6 +73,19 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
         return fragment;
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCallbacks = (Callbacks)context;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((MyApp) getActivity().getApplication()).getComponent().inject(this);
@@ -82,10 +105,16 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
             dialog.show(getFragmentManager(), DIALOG_DATE);
         });
 
+        mBinding.cameraAndTitle.crimePhoto.setOnClickListener(v -> {
+            if(mCrime.getImageUrl() == null) return;
+
+            ImageZoomFragment dialog = ImageZoomFragment.newInstance(mCrime.getImageUrl());
+            dialog.show(getFragmentManager(), DIALOG_IMAGE);
+        });
+
         mBinding.saveCrimeBtn.setOnClickListener(v -> {
             mPresenter.saveCrime(mCrime);
-            BlameUtils.hideKeyboard(v);
-            getActivity().finish();
+
         });
 
         // report crime
@@ -215,10 +244,16 @@ public class CrimeFragment extends Fragment implements AddCrimeContract.View {
     }
 
     @Override
-    public void crimeRemoved(Boolean success) {
+    public void crimeRemoved(Boolean success, Crime crime) {
         if (!success) return;
 
-        getActivity().finish();
+        mCallbacks.onCrimeChanged(crime);
+    }
+
+    @Override
+    public void crimeSaved(Crime crime) {
+        BlameUtils.hideKeyboard(getActivity());
+        mCallbacks.onCrimeChanged(crime);
     }
 
     private String getCrimeReport() {

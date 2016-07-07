@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:context="com.kabz.blameintent.addcrime.NewCrimeActivity">
+
+
+  <FrameLayout
+    android:id="@+id/fragment_container"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    tools:background="@android:color/darker_gray"
+    android:layout_weight=".25" />
+
+
+  <FrameLayout
+    android:id="@+id/detail_fragment_container"
+    android:layout_width="0dp"
+    tools:background="@android:color/holo_blue_dark"
+    android:layout_height="match_parent"
+    android:layout_weight=".75" />
+</LinearLayout>

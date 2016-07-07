@@ -5,6 +5,7 @@ import android.app.Application;
 import javax.inject.Singleton;
 
 import dagger.Component;
+import timber.log.Timber;
 
 public final class MyApp extends Application {
     @Singleton
@@ -13,6 +14,12 @@ public final class MyApp extends Application {
     }
 
     private final CrimeComponent _component = createComponent();
+
+    public MyApp() {
+        if(BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+    }
 
     protected CrimeComponent createComponent() {
         return DaggerMyApp_AppComponent.builder()

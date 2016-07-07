@@ -12,7 +12,9 @@ public interface AddCrimeContract {
 
         void initialize(Crime crime, File photoFile);
 
-        void crimeRemoved(Boolean success);
+        void crimeRemoved(Boolean success, Crime crime);
+
+        void crimeSaved(Crime crime);
     }
 
     interface Presenter {
